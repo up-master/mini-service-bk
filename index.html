@@ -175,7 +175,6 @@
     <p class="small">Test the orderCompleted() method with order and transaction IDs</p>
     
     <button class="success" id="btnOrderCompleted">✅ Trigger orderCompleted()</button>
-    <button class="secondary small" onclick="generateOrderData()">�� Generate New IDs</button>
 </div>
 
 <div class="section">
@@ -356,14 +355,6 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
             `;
             methodsEl.appendChild(div);
         });
-    }
-
-    function generateOrderData() {
-        orderData = {
-            orderId: "order_" + Date.now(),
-            transactionId: "txn_" + Date.now()
-        };
-        log(`🔄 Generated new order data: ${JSON.stringify(orderData)}`, 'info');
     }
 
     function validatePaymentData() {
