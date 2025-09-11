@@ -3,617 +3,456 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bakong Bridge Test - External Service</title>
+    <title>Bakong Mini Service Bridge Tester</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .status-card {
+            margin: 0; 
+            padding: 16px; 
             background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
         }
-        
-        .status-card h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
-            font-size: 18px;
+        h1 { font-size: 24px; margin: 0 0 8px; color: #1e293b; }
+        h2 { font-size: 18px; margin: 16px 0 8px; color: #334155; }
+        p { color: #64748b; margin: 0 0 16px; line-height: 1.5; }
+        .section { 
+            background: #fff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            padding: 16px; 
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        
-        .bridge-status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .status-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        .status-available {
-            background: #dcfce7;
-            color: #166534;
-        }
-        
-        .status-unavailable {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        .status-checking {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        .method-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        
-        .method-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-        }
-        
-        .method-available {
-            color: #059669;
-        }
-        
-        .method-unavailable {
-            color: #dc2626;
-        }
-        
-        .test-section {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .test-section h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        
-        .test-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
+        .section h3 { margin: 0 0 8px; font-size: 16px; color: #1e293b; }
+        button { 
+            display: inline-block; 
+            padding: 10px 16px; 
+            margin: 6px 4px 0 0; 
+            border: 0; 
+            border-radius: 8px; 
+            background: #3b82f6; 
+            color: #fff; 
+            font-weight: 600; 
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.2s;
+        }
+        button:hover { background: #2563eb; }
+        button.secondary { background: #64748b; }
+        button.secondary:hover { background: #475569; }
+        button.success { background: #10b981; }
+        button.success:hover { background: #059669; }
+        button.warn { background: #ef4444; }
+        button.warn:hover { background: #dc2626; }
+        button.small { padding: 6px 12px; font-size: 14px; }
+        /* Enforce white text for all buttons */
+        button, button.secondary, button.success, button.warn, button.small { color: #ffffff !important; }
+        
+        code { 
+            background: #1e293b; 
+            color: #e2e8f0; 
+            padding: 2px 6px; 
+            border-radius: 4px; 
             font-size: 14px;
         }
-        
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #64748b;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #475569;
-        }
-        
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: #059669;
-        }
-        
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #d97706;
-        }
-        
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+        pre { 
+            background: #1e293b; 
+            color: #e2e8f0; 
+            padding: 16px; 
+            border-radius: 8px; 
+            overflow-x: auto;
             font-size: 14px;
-            font-family: 'Courier New', monospace;
+            line-height: 1.4;
         }
+        .small { font-size: 12px; color: #6b7280; }
         
-        .form-control:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        input[type="text"], textarea, select { 
+            width: 100%; 
+            box-sizing: border-box; 
+            padding: 12px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 8px; 
+            margin-top: 8px; 
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            font-size: 14px;
         }
+        textarea { min-height: 120px; }
+        
+        .badge { 
+            display: inline-block; 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+            font-weight: 500;
+            margin-left: 8px; 
+        }
+        .badge.available { background: #dcfce7; color: #166534; }
+        .badge.unavailable { background: #fee2e2; color: #991b1b; }
+        .badge.checking { background: #fef3c7; color: #92400e; }
+        
+        .method-status { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .method-status:last-child { border-bottom: none; }
+        .method-name { font-family: monospace; font-weight: 500; }
+        .method-available { color: #059669; }
+        .method-unavailable { color: #dc2626; }
         
         .logs {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 8px;
-            padding: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            margin-top: 20px;
-        }
-        
-        .log-entry {
-            margin-bottom: 5px;
-            padding: 2px 0;
-        }
-        
-        .log-info { color: #60a5fa; }
-        .log-success { color: #34d399; }
-        .log-warning { color: #fbbf24; }
-        .log-error { color: #f87171; }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid;
-        }
-        
-        .alert-info {
-            background: #dbeafe;
-            border-color: #3b82f6;
-            color: #1e40af;
-        }
-        
-        .alert-success {
-            background: #d1fae5;
-            border-color: #10b981;
-            color: #065f46;
-        }
-        
-        .alert-warning {
-            background: #fef3c7;
-            border-color: #f59e0b;
-            color: #92400e;
-        }
-        
-        .alert-error {
-            background: #fee2e2;
-            border-color: #ef4444;
-            color: #991b1b;
-        }
-        
-        .user-agent-info {
-            background: #f0f9ff;
-            border: 1px solid #0ea5e9;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .user-agent-info h4 {
-            color: #0c4a6e;
-            margin-bottom: 10px;
-        }
-        
-        .user-agent-display {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            word-break: break-all;
-            margin: 10px 0;
-        }
-        
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            
-            .test-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .method-list {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .footer {
             background: #f8fafc;
-            padding: 20px;
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
         }
+        .log-entry { margin-bottom: 4px; }
+        .log-info { color: #3b82f6; }
+        .log-success { color: #059669; }
+        .log-warn { color: #d97706; }
+        .log-error { color: #dc2626; }
+
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .warning-box h4 { margin: 0 0 8px; color: #92400e; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏦 Bakong Bridge Test</h1>
-            <p>External service for testing Bakong mini service integration</p>
-        </div>
-        
-        <div class="content">
-            <div class="alert alert-info">
-                <strong>📱 Testing Instructions:</strong> Load this page in the Bakong Bridge Tester app using the "Load URL" menu option to test your service integration.
-            </div>
-            
-            <div class="user-agent-info">
-                <h4>🌐 Current User-Agent</h4>
-                <div class="user-agent-display" id="userAgentDisplay">Loading...</div>
-                <button class="btn btn-secondary" onclick="copyUserAgent()">📋 Copy User-Agent</button>
-                <button class="btn btn-primary" onclick="testUserAgentDetection()">🔍 Test Detection</button>
-            </div>
-            
-            <div class="status-card">
-                <h3>🔗 Bridge Status</h3>
-                <div class="bridge-status">
-                    <span>Bakong Bridge:</span>
-                    <span class="status-badge" id="bridgeStatus">checking…</span>
-                </div>
-                <div class="method-list" id="methods"></div>
-            </div>
-            
-            <div class="grid-2">
-                <div class="test-section">
-                    <h3>💰 Payment Testing</h3>
-                    <div class="test-buttons">
-                        <button class="btn btn-primary" onclick="loadPreset('valid')">✅ Valid Data</button>
-                        <button class="btn btn-warning" onclick="loadPreset('invalid')">❌ Invalid Data</button>
-                        <button class="btn btn-success" onclick="loadPreset('high_amount')">💎 High Amount</button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Payment Data (JSON)</label>
-                        <textarea class="form-control" id="paymentPayload" rows="8" placeholder="Enter payment data JSON here..."></textarea>
-                    </div>
-                    
-                    <button class="btn btn-primary" id="btnPayment" onclick="testPaymentInput()">🚀 Test paymentInput()</button>
-                    <button class="btn btn-secondary" onclick="validatePaymentData()">🔍 Validate Only</button>
-                </div>
-                
-                <div class="test-section">
-                    <h3>✅ Order Completion</h3>
-                    <div class="test-buttons">
-                        <button class="btn btn-success" onclick="loadOrderPreset('success')">✅ Success</button>
-                        <button class="btn btn-danger" onclick="loadOrderPreset('failed')">❌ Failed</button>
-                        <button class="btn btn-warning" onclick="loadOrderPreset('pending')">⏳ Pending</button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Order Result Data (JSON)</label>
-                        <textarea class="form-control" id="orderPayload" rows="6" placeholder="Enter order completion data JSON here..."></textarea>
-                    </div>
-                    
-                    <button class="btn btn-secondary" id="btnOrderCompleted" onclick="testOrderCompleted()">📤 Test orderCompleted()</button>
-                </div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🧭 Navigation Testing</h3>
-                <div class="test-buttons">
-                    <button class="btn btn-secondary" onclick="testGoBack()">⬅️ Test goBack()</button>
-                    <button class="btn btn-danger" onclick="testDismiss()">❌ Test dismiss()</button>
-                </div>
-            </div>
-            
-            <div class="test-section">
-                <h3>🧪 Advanced Testing</h3>
-                <div class="test-buttons">
-                    <button class="btn btn-primary" onclick="testAllMethods()">🔄 Test All Methods</button>
-                    <button class="btn btn-warning" onclick="testErrorScenarios()">⚠️ Error Scenarios</button>
-                    <button class="btn btn-success" onclick="testDataValidation()">🔍 Data Validation</button>
-                    <button class="btn btn-danger" onclick="stressTest()">💪 Stress Test</button>
-                </div>
-            </div>
-            
-            <div class="test-section">
-                <h3>📊 Test Logs</h3>
-                <div class="test-buttons">
-                    <button class="btn btn-secondary" onclick="clearLogs()">🗑️ Clear Logs</button>
-                    <button class="btn btn-primary" onclick="exportLogs()">📥 Export Logs</button>
-                </div>
-                <div class="logs" id="logs">
-                    <div class="log-entry log-info">🚀 Bridge tester initialized</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Bakong Mini Service Bridge Test - External Service</p>
-            <p>Use this page to test your service integration with the Bakong app</p>
-        </div>
+<h1>Bakong Mini Service Bridge Tester</h1>
+<p>Comprehensive testing tool for validating JavaScript bridge integration with the Bakong mobile app. Test all bridge methods, validate data formats, and simulate various payment scenarios.</p>
+
+<div class="warning-box">
+    <h4>Important for Service Providers</h4>
+    <p>This tool simulates the Bakong app environment. Use it to test your service integration before submitting for approval. All bridge methods must work correctly for your service to be accepted.</p>
+</div>
+
+<div class="section">
+    <h3>Bridge Availability Status</h3>
+    <div style="margin-bottom: 12px;">
+        <strong>Bakong Bridge:</strong> <span id="bridgeStatus" class="badge checking">checking…</span>
     </div>
+    <div id="methods"></div>
+</div>
 
-    <script>
-        // Test data presets
-        const presets = {
-            valid: {
-                amount: "50.00",
-                currencyCode: "KHR",
-                receiverAccountId: "test_merchant_123",
-                merchantName: "External Test Service",
-                description: "Bridge validation test payment",
-                transaction_id: "ext_txn_" + Date.now(),
-                order_id: "ext_order_" + Date.now()
-            },
-            invalid: {
-                amount: "invalid_amount",
-                currencyCode: "",
-                receiverAccountId: "",
-                merchantName: "",
-                description: "",
-                transaction_id: "",
-                order_id: ""
-            },
-            high_amount: {
-                amount: "10000.00",
-                currencyCode: "KHR",
-                receiverAccountId: "high_test_123",
-                merchantName: "High Value Service",
-                description: "High amount test (may require KYC)",
-                transaction_id: "high_txn_" + Date.now(),
-                order_id: "high_order_" + Date.now()
-            }
-        };
+<div class="section">
+    <h3>Payment Input Testing</h3>
+    <p class="small">Test the paymentInput() method with Sorya Bus payment data</p>
 
-        const orderPresets = {
-            success: {
-                order_id: "order_" + Date.now(),
-                transaction_id: "txn_" + Date.now(),
-                transaction_hash: "0x" + generateRandomHash(),
-                status: "completed",
-                amount: "50.00",
-                currency: "KHR"
-            },
-            failed: {
-                order_id: "order_" + Date.now(),
-                transaction_id: "txn_" + Date.now(),
-                status: "failed",
-                error: "Insufficient funds",
-                error_code: "INSUFFICIENT_FUNDS"
-            },
-            pending: {
-                order_id: "order_" + Date.now(),
-                transaction_id: "txn_" + Date.now(),
-                status: "pending",
-                message: "Payment is being processed"
-            }
-        };
+    <label class="small">Payment Data (JSON)</label>
+    <textarea id="paymentPayload" placeholder="Enter payment data JSON here..."></textarea>
+    <button id="btnPayment">Trigger paymentInput()</button>
+    <button class="secondary small" onclick="validatePaymentData()">🔍 Validate Only</button>
+</div>
 
-        // Utility functions
-        function hasBridge() { 
-            return typeof window.Bakong === 'object' && window.Bakong !== null; 
+<div class="section">
+    <h3>Order Completion Testing</h3>
+    <p class="small">Test the orderCompleted() method with order and transaction IDs</p>
+
+    <button class="success" id="btnOrderCompleted">✅ Trigger orderCompleted()</button>
+</div>
+
+<div class="section">
+    <h3>Navigation Testing</h3>
+    <p class="small">Test navigation bridge methods</p>
+    <button class="secondary" id="btnGoBack">⬅️ goBack()</button>
+    <button class="warn" id="btnDismiss">❌ dismiss()</button>
+</div>
+
+<!-- Appearance Controls section -->
+<div class="section">
+    <h3>Appearance Controls</h3>
+    <p class="small">Control title, status bar, and toolbar appearance via bridge</p>
+
+    <label class="small">Set Title</label>
+    <input id="titleInput" type="text" placeholder="Enter title (e.g., My Service Page)" />
+    <button class="small" id="btnSetTitle">setTitle()</button>
+
+    <div style="height: 8px"></div>
+
+    <label class="small">Status Bar Background Color (hex or CSS color)</label>
+    <input id="statusBgInput" type="text" placeholder="#121212 or #FFFFFF or rgb(0,0,0)" />
+    <button class="small" id="btnSetStatusBarColor">setStatusBarColor(background)</button>
+
+    <div style="height: 8px"></div>
+
+    <label class="small">Status Bar Icons Mode</label>
+    <select id="iconModeSelect">
+        <option value="light">Light Icons (for dark background)</option>
+        <option value="dark">Dark Icons (for light background)</option>
+    </select>
+    <button class="small" id="btnSetIconMode">setStatusBarIconColor(isLight)</button>
+
+    <div style="height: 8px"></div>
+
+    <label class="small">Set Background & Icons Together</label>
+    <button class="small" id="btnSetStatusBarBoth">setStatusBarColor(background, color)</button>
+
+    <div style="height: 8px"></div>
+
+    <label class="small">Toolbar Visibility</label>
+    <button class="small success" id="btnShowToolbar">Show Toolbar</button>
+    <button class="small warn" id="btnHideToolbar">Hide Toolbar</button>
+</div>
+
+<div class="section">
+    <h3>Test Results & Logs</h3>
+    <div id="logs" class="logs">
+        <div class="log-entry log-info">Bridge tester initialized</div>
+    </div>
+    <button class="small secondary" onclick="clearLogs()">🗑️ Clear Logs</button>
+    <button class="small" onclick="exportLogs()">📥 Export Logs</button>
+</div>
+
+<div class="section">
+    <h3>Implementation Examples</h3>
+    <p class="small">Copy this code snippet to implement in your service:</p>
+
+    <h4>Payment Input Implementation</h4>
+    <pre><code>// Always check if bridge is available before calling
+if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
+    const paymentData = {
+        amount: "54000",
+        currencyCode: "116",
+        currencyName: "KHR",
+        description: "Book tickets",
+        merchantName: "Sorya Bus",
+        receiverAccountId: "soyabus@devb",
+        receiverName: "Chanmony Sok",
+        orderId: "000001474"
+    };
+    window.Bakong.paymentInput(JSON.stringify(paymentData));
+} else {
+    console.error('Bakong bridge not available');
+}</code></pre>
+</div>
+
+<script>
+    // Default payment data for Sorya Bus
+    const defaultPaymentData = {
+        amount: "54000",
+        currencyCode: "116",
+        currencyName: "KHR",
+        description: "Book tickets",
+        merchantName: "Sorya Bus",
+        receiverAccountId: "soyabus@devb",
+        receiverName: "Chanmony Sok",
+        orderId: "000001474"
+    };
+
+    // Order completion data
+    let orderData = {
+        orderId: "order_" + Date.now(),
+        transactionId: "txn_" + Date.now()
+    };
+
+    // Utility functions
+    function hasBridge() {
+        return typeof window.Bakong === 'object' && window.Bakong !== null;
+    }
+
+    function hasMethod(name) {
+        return hasBridge() && typeof window.Bakong[name] === 'function';
+    }
+
+    function generateRandomHash() {
+        const chars = "abcdef0123456789";
+        return Array.from({length: 64}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+
+    function log(message, type = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = `log-entry log-${type}`;
+
+        const icon = {
+            info: 'ℹ️',
+            success: '✅',
+            warn: '⚠️',
+            error: '❌'
+        }[type] || 'ℹ️';
+
+        logEntry.textContent = `[${timestamp}] ${icon} ${message}`;
+
+        const logs = document.getElementById('logs');
+        logs.appendChild(logEntry);
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    function updateBridgeStatus() {
+        const statusEl = document.getElementById('bridgeStatus');
+        const methodsEl = document.getElementById('methods');
+
+        if (hasBridge()) {
+            statusEl.textContent = 'Available';
+            statusEl.className = 'badge available';
+            log('Bakong bridge detected successfully', 'success');
+        } else {
+            statusEl.textContent = 'Not Available';
+            statusEl.className = 'badge unavailable';
+            log('Bakong bridge not detected', 'error');
         }
-        
-        function hasMethod(name) { 
-            return hasBridge() && typeof window.Bakong[name] === 'function'; 
-        }
 
-        function generateRandomHash() {
-            const chars = "abcdef0123456789";
-            return Array.from({length: 64}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-        }
+        // Check individual methods
+        const methods = ['paymentInput', 'orderCompleted', 'goBack', 'dismiss', 'setTitle', 'setStatusBarIconColor', 'setStatusBarColor', 'setToolbarVisible'];
+        methodsEl.innerHTML = '';
 
-        function log(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry log-${type}`;
-            
-            const icon = {
-                info: 'ℹ️',
-                success: '✅',
-                warning: '⚠️',
-                error: '❌'
-            }[type] || 'ℹ️';
-            
-            logEntry.textContent = `[${timestamp}] ${icon} ${message}`;
-            
-            const logs = document.getElementById('logs');
-            logs.appendChild(logEntry);
-            logs.scrollTop = logs.scrollHeight;
-        }
+        methods.forEach(method => {
+            const div = document.createElement('div');
+            div.className = 'method-status';
 
-        function updateUserAgentDisplay() {
-            const display = document.getElementById('userAgentDisplay');
-            const currentUA = navigator.userAgent;
-            display.textContent = currentUA;
-            log(`�� User-Agent: ${currentUA}`, 'info');
-        }
+            const available = hasMethod(method);
+            div.innerHTML = `
+                <span class="method-name">${method}()</span>
+                <span class="${available ? 'method-available' : 'method-unavailable'}">
+                    ${available ? '✅ Available' : '❌ Missing'}
+                </span>
+            `;
+            methodsEl.appendChild(div);
+        });
+    }
 
-        function copyUserAgent() {
-            const ua = navigator.userAgent;
-            navigator.clipboard.writeText(ua).then(() => {
-                log('📋 User-Agent copied to clipboard', 'success');
-                showAlert('Success', 'User-Agent copied to clipboard!');
-            }).catch(() => {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = ua;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                log('📋 User-Agent copied to clipboard (fallback)', 'success');
-                showAlert('Success', 'User-Agent copied to clipboard!');
-            });
-        }
+    function validatePaymentData() {
+        try {
+            const rawData = document.getElementById('paymentPayload').value;
+            const data = JSON.parse(rawData);
 
-        function testUserAgentDetection() {
-            const ua = navigator.userAgent;
-            const isBakong = ua.includes('Bakong') || ua.includes('BakongApp');
-            const version = ua.match(/BakongApp\/(\d+\.\d+\.\d+)/);
-            
-            let message = `User-Agent Detection Test:\n\n`;
-            message += `Current UA: ${ua}\n\n`;
-            message += `Is Bakong App: ${isBakong ? 'Yes' : 'No'}\n`;
-            if (version) {
-                message += `Bakong Version: ${version[1]}\n`;
-            }
-            message += `\nThis helps your service detect if it's running in the Bakong app.`;
-            
-            log(`🔍 User-Agent detection: ${isBakong ? 'Bakong detected' : 'Not Bakong'}`, isBakong ? 'success' : 'warning');
-            showAlert('User-Agent Detection', message);
-        }
+            const required = ['amount', 'currencyCode', 'currencyName', 'description', 'merchantName', 'receiverAccountId', 'receiverName', 'orderId'];
+            const missing = required.filter(field => !data[field] || data[field].toString().trim() === '');
 
-        function updateBridgeStatus() {
-            const statusEl = document.getElementById('bridgeStatus');
-            const methodsEl = document.getElementById('methods');
-            
-            if (hasBridge()) {
-                statusEl.textContent = 'Available';
-                statusEl.className = 'status-badge status-available';
-                log('Bakong bridge detected successfully', 'success');
+            if (missing.length === 0) {
+                log('✅ Payment data validation passed', 'success');
+                alert('✅ Validation Passed\n\nAll required fields are present and valid.');
             } else {
-                statusEl.textContent = 'Not Available';
-                statusEl.className = 'status-badge status-unavailable';
-                log('Bakong bridge not detected', 'error');
+                log(`❌ Payment data validation failed: missing ${missing.join(', ')}`, 'error');
+                alert(`❌ Validation Failed\n\nMissing required fields:\n${missing.join(', ')}`);
             }
-
-            // Check individual methods
-            const methods = ['paymentInput', 'orderCompleted', 'goBack', 'dismiss'];
-            methodsEl.innerHTML = '';
-            
-            methods.forEach(method => {
-                const div = document.createElement('div');
-                div.className = 'method-item';
-                
-                const available = hasMethod(method);
-                div.innerHTML = `
-                    <span>${method}()</span>
-                    <span class="${available ? 'method-available' : 'method-unavailable'}">
-                        ${available ? '✅ Available' : '❌ Missing'}
-                    </span>
-                `;
-                methodsEl.appendChild(div);
-            });
+        } catch (e) {
+            log(`❌ Invalid JSON in payment data: ${e.message}`, 'error');
+            alert(`❌ Invalid JSON\n\n${e.message}`);
         }
+    }
 
-        function loadPreset(presetName) {
-            const preset = presets[presetName];
-            if (preset) {
-                document.getElementById('paymentPayload').value = JSON.stringify(preset, null, 2);
-                log(`Loaded ${presetName} payment preset`, 'info');
-            }
+    function clearLogs() {
+        document.getElementById('logs').innerHTML = '<div class="log-entry log-info">️ Logs cleared</div>';
+    }
+
+    function exportLogs() {
+        const logs = document.getElementById('logs').textContent;
+        const blob = new Blob([logs], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bakong-bridge-test-logs-${new Date().toISOString()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        log('📥 Logs exported successfully', 'success');
+    }
+
+    // Bridge helper functions
+    function callSetTitle() {
+        const title = document.getElementById('titleInput').value.trim();
+        if (!hasMethod('setTitle')) {
+            log('❌ setTitle() method not available', 'error');
+            alert('❌ Bridge Error\n\nsetTitle() method is not available');
+            return;
         }
-
-        function loadOrderPreset(presetName) {
-            const preset = orderPresets[presetName];
-            if (preset) {
-                document.getElementById('orderPayload').value = JSON.stringify(preset, null, 2);
-                log(`Loaded ${presetName} order preset`, 'info');
-            }
+        try {
+            window.Bakong.setTitle(title || '');
+            log(`📝 Called setTitle('${title}')`, 'success');
+        } catch (e) {
+            log(`❌ Error calling setTitle(): ${e.message}`, 'error');
         }
+    }
 
-        function testPaymentInput() {
+    function callSetStatusBarColorOnly() {
+        const bg = document.getElementById('statusBgInput').value.trim();
+        if (!hasMethod('setStatusBarColor')) {
+            log('❌ setStatusBarColor() method not available', 'error');
+            alert('❌ Bridge Error\n\nsetStatusBarColor() method is not available');
+            return;
+        }
+        try {
+            window.Bakong.setStatusBarColor(bg || '#121212');
+            log(`🎨 Called setStatusBarColor('${bg || '#121212'}')`, 'success');
+        } catch (e) {
+            log(`❌ Error calling setStatusBarColor(background): ${e.message}`, 'error');
+        }
+    }
+
+    function callSetIconModeOnly() {
+        const mode = document.getElementById('iconModeSelect').value;
+        const isLight = mode === 'light';
+        if (!hasMethod('setStatusBarIconColor')) {
+            log('❌ setStatusBarIconColor() method not available', 'error');
+            alert('❌ Bridge Error\n\nsetStatusBarIconColor() method is not available');
+            return;
+        }
+        try {
+            window.Bakong.setStatusBarIconColor(isLight);
+            log(`🌓 Called setStatusBarIconColor(${isLight})`, 'success');
+        } catch (e) {
+            log(`❌ Error calling setStatusBarIconColor(): ${e.message}`, 'error');
+        }
+    }
+
+    function callSetStatusBarBoth() {
+        const bg = document.getElementById('statusBgInput').value.trim() || '#121212';
+        const mode = document.getElementById('iconModeSelect').value; // 'light' | 'dark'
+        if (!hasMethod('setStatusBarColor')) {
+            log('❌ setStatusBarColor(background, color) method not available', 'error');
+            alert('❌ Bridge Error\n\nsetStatusBarColor(background, color) method is not available');
+            return;
+        }
+        try {
+            window.Bakong.setStatusBarColor(bg, mode);
+            log(`🎯 Called setStatusBarColor('${bg}', '${mode}')`, 'success');
+        } catch (e) {
+            log(`❌ Error calling setStatusBarColor(background, color): ${e.message}`, 'error');
+        }
+    }
+
+    function callSetToolbarVisible(visible) {
+        if (!hasMethod('setToolbarVisible')) {
+            log('❌ setToolbarVisible() method not available', 'error');
+            alert('❌ Bridge Error\n\nsetToolbarVisible() method is not available');
+            return;
+        }
+        try {
+            window.Bakong.setToolbarVisible(visible);
+            log(`📱 Called setToolbarVisible(${visible})`, 'success');
+        } catch (e) {
+            log(`❌ Error calling setToolbarVisible(): ${e.message}`, 'error');
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        updateBridgeStatus();
+        setTimeout(updateBridgeStatus, 1000); // Recheck after 1 second
+
+        // Load default payment data
+        document.getElementById('paymentPayload').value = JSON.stringify(defaultPaymentData, null, 2);
+
+        // Set up event listeners
+        document.getElementById('btnPayment').addEventListener('click', function() {
             if (!hasMethod('paymentInput')) {
                 log('❌ paymentInput() method not available', 'error');
-                showAlert('Bridge Error', 'paymentInput() method is not available');
+                alert('❌ Bridge Error\n\npaymentInput() method is not available');
                 return;
             }
-            
+
             try {
                 const rawData = document.getElementById('paymentPayload').value;
                 const data = JSON.parse(rawData);
@@ -621,226 +460,72 @@
                 log('📤 Called paymentInput() successfully', 'success');
             } catch (e) {
                 log(`❌ Error calling paymentInput(): ${e.message}`, 'error');
-                showAlert('Error', e.message);
+                alert(`❌ Error\n\n${e.message}`);
             }
-        }
+        });
 
-        function testOrderCompleted() {
+        document.getElementById('btnOrderCompleted').addEventListener('click', function() {
             if (!hasMethod('orderCompleted')) {
                 log('❌ orderCompleted() method not available', 'error');
-                showAlert('Bridge Error', 'orderCompleted() method is not available');
+                alert('❌ Bridge Error\n\norderCompleted() method is not available');
                 return;
             }
-            
+
             try {
-                const rawData = document.getElementById('orderPayload').value;
-                const data = JSON.parse(rawData);
-                window.Bakong.orderCompleted(JSON.stringify(data));
-                log('📤 Called orderCompleted() successfully', 'success');
+                window.Bakong.orderCompleted(JSON.stringify(orderData));
+                log(`📤 Called orderCompleted() with data: ${JSON.stringify(orderData)}`, 'success');
             } catch (e) {
                 log(`❌ Error calling orderCompleted(): ${e.message}`, 'error');
-                showAlert('Error', e.message);
+                alert(`❌ Error\n\n${e.message}`);
             }
-        }
+        });
 
-        function testGoBack() {
+        document.getElementById('btnGoBack').addEventListener('click', function() {
             if (!hasMethod('goBack')) {
                 log('❌ goBack() method not available', 'error');
-                showAlert('Bridge Error', 'goBack() method is not available');
+                alert('❌ Bridge Error\n\ngoBack() method is not available');
                 return;
             }
-            
+
             window.Bakong.goBack();
             log('📤 Called goBack() successfully', 'success');
-        }
+        });
 
-        function testDismiss() {
+        document.getElementById('btnDismiss').addEventListener('click', function() {
             if (!hasMethod('dismiss')) {
                 log('❌ dismiss() method not available', 'error');
-                showAlert('Bridge Error', 'dismiss() method is not available');
+                alert('❌ Bridge Error\n\ndismiss() method is not available');
                 return;
             }
-            
+
             window.Bakong.dismiss();
             log('📤 Called dismiss() successfully', 'success');
-        }
-
-        function validatePaymentData() {
-            try {
-                const rawData = document.getElementById('paymentPayload').value;
-                const data = JSON.parse(rawData);
-                
-                const required = ['amount', 'currencyCode', 'receiverAccountId', 'merchantName', 'description', 'transaction_id', 'order_id'];
-                const missing = required.filter(field => !data[field] || data[field].toString().trim() === '');
-                
-                if (missing.length === 0) {
-                    log('✅ Payment data validation passed', 'success');
-                    showAlert('Validation Passed', 'All required fields are present and valid.');
-                } else {
-                    log(`❌ Payment data validation failed: missing ${missing.join(', ')}`, 'error');
-                    showAlert('Validation Failed', `Missing required fields:\n${missing.join(', ')}`);
-                }
-            } catch (e) {
-                log(`❌ Invalid JSON in payment data: ${e.message}`, 'error');
-                showAlert('Invalid JSON', e.message);
-            }
-        }
-
-        function testAllMethods() {
-            log('🧪 Starting comprehensive method test', 'info');
-            
-            const methods = ['paymentInput', 'orderCompleted', 'goBack', 'dismiss'];
-            let available = 0;
-            
-            methods.forEach(method => {
-                if (hasMethod(method)) {
-                    available++;
-                    log(`✅ ${method}() is available`, 'success');
-                } else {
-                    log(`❌ ${method}() is missing`, 'error');
-                }
-            });
-            
-            log(`📊 Test complete: ${available}/${methods.length} methods available`, available === methods.length ? 'success' : 'warning');
-        }
-
-        function testErrorScenarios() {
-            log('🧪 Testing error scenarios', 'info');
-            
-            // Test with null data
-            if (hasMethod('paymentInput')) {
-                try {
-                    window.Bakong.paymentInput(null);
-                    log('📤 Sent null to paymentInput()', 'warning');
-                } catch (e) {
-                    log(`❌ Error calling paymentInput() with null: ${e.message}`, 'error');
-                }
-            }
-            
-            // Test with empty string
-            if (hasMethod('paymentInput')) {
-                try {
-                    window.Bakong.paymentInput('');
-                    log('📤 Sent empty string to paymentInput()', 'warning');
-                } catch (e) {
-                    log(`❌ Error calling paymentInput() with empty string: ${e.message}`, 'error');
-                }
-            }
-            
-            // Test with invalid JSON
-            if (hasMethod('paymentInput')) {
-                try {
-                    window.Bakong.paymentInput('{invalid json}');
-                    log('📤 Sent invalid JSON to paymentInput()', 'warning');
-                } catch (e) {
-                    log(`❌ Error calling paymentInput() with invalid JSON: ${e.message}`, 'error');
-                }
-            }
-            
-            log('🧪 Error scenarios test complete', 'info');
-        }
-
-        function testDataValidation() {
-            log('🧪 Testing data validation scenarios', 'info');
-            
-            const testCases = [
-                { name: 'Valid data', data: presets.valid },
-                { name: 'Missing amount', data: { ...presets.valid, amount: '' } },
-                { name: 'Invalid currency', data: { ...presets.valid, currencyCode: 'INVALID' } },
-                { name: 'Empty merchant', data: { ...presets.valid, merchantName: '' } },
-                { name: 'Missing IDs', data: { ...presets.valid, transaction_id: '', order_id: '' } }
-            ];
-            
-            testCases.forEach(testCase => {
-                const required = ['amount', 'currencyCode', 'receiverAccountId', 'merchantName', 'description', 'transaction_id', 'order_id'];
-                const missing = required.filter(field => !testCase.data[field] || testCase.data[field].toString().trim() === '');
-                
-                if (missing.length === 0) {
-                    log(`✅ ${testCase.name}: VALID`, 'success');
-                } else {
-                    log(`❌ ${testCase.name}: Missing ${missing.join(', ')}`, 'warning');
-                }
-            });
-            
-            log('🧪 Data validation test complete', 'info');
-        }
-
-        function stressTest() {
-            log('🧪 Starting stress test', 'info');
-            
-            const iterations = 5;
-            let successCount = 0;
-            
-            for (let i = 0; i < iterations; i++) {
-                try {
-                    const testData = {
-                        ...presets.valid,
-                        transaction_id: `stress_test_${i}_${Date.now()}`,
-                        order_id: `stress_order_${i}_${Date.now()}`
-                    };
-                    
-                    if (hasMethod('paymentInput')) {
-                        window.Bakong.paymentInput(JSON.stringify(testData));
-                        successCount++;
-                        log(`📤 Stress test ${i + 1}/${iterations}: SUCCESS`, 'success');
-                    }
-                    
-                    // Small delay between calls
-                    setTimeout(() => {}, 10);
-                } catch (e) {
-                    log(`❌ Stress test ${i + 1}/${iterations}: FAILED - ${e.message}`, 'error');
-                }
-            }
-            
-            log(`🧪 Stress test complete: ${successCount}/${iterations} successful`, successCount === iterations ? 'success' : 'warning');
-        }
-
-        function clearLogs() {
-            document.getElementById('logs').innerHTML = '<div class="log-entry log-info">🗑️ Logs cleared</div>';
-        }
-
-        function exportLogs() {
-            const logs = document.getElementById('logs').textContent;
-            const blob = new Blob([logs], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `bakong-bridge-test-logs-${new Date().toISOString()}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            log('📥 Logs exported successfully', 'success');
-        }
-
-        function showAlert(title, message) {
-            alert(`${title}\n\n${message}`);
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateBridgeStatus();
-            updateUserAgentDisplay();
-            setTimeout(updateBridgeStatus, 1000); // Recheck after 1 second
-            
-            // Load default presets
-            loadPreset('valid');
-            loadOrderPreset('success');
-            
-            // Listen for payment completion events
-            window.addEventListener('PaymentCompleted', function(event) {
-                try {
-                    const detail = event && event.detail ? event.detail : '';
-                    const parsed = detail ? JSON.parse(detail) : detail;
-                    log('📥 PaymentCompleted event received', 'success');
-                    console.log('PaymentCompleted received:', parsed);
-                    showAlert('Payment Event Received', JSON.stringify(parsed || detail, null, 2));
-                } catch (e) {
-                    log(`❌ Error parsing PaymentCompleted event: ${e.message}`, 'error');
-                    showAlert('Payment Event Received (raw)', event && event.detail);
-                }
-            });
-            
-            log('🚀 External bridge tester fully initialized and ready', 'success');
         });
-    </script>
+
+        // Appearance controls event listeners
+        document.getElementById('btnSetTitle').addEventListener('click', callSetTitle);
+        document.getElementById('btnSetStatusBarColor').addEventListener('click', callSetStatusBarColorOnly);
+        document.getElementById('btnSetIconMode').addEventListener('click', callSetIconModeOnly);
+        document.getElementById('btnSetStatusBarBoth').addEventListener('click', callSetStatusBarBoth);
+        document.getElementById('btnShowToolbar').addEventListener('click', () => callSetToolbarVisible(true));
+        document.getElementById('btnHideToolbar').addEventListener('click', () => callSetToolbarVisible(false));
+
+        // Listen for payment completion events
+        window.addEventListener('PaymentCompleted', function(event) {
+            try {
+                const detail = event && event.detail ? event.detail : '';
+                const parsed = detail ? JSON.parse(detail) : detail;
+                log('📥 PaymentCompleted event received', 'success');
+                console.log('PaymentCompleted received:', parsed);
+                alert(`📥 Payment Event Received\n\n${JSON.stringify(parsed || detail, null, 2)}`);
+            } catch (e) {
+                log(`❌ Error parsing PaymentCompleted event: ${e.message}`, 'error');
+                alert(`📥 Payment Event Received (raw)\n\n${event && event.detail}`);
+            }
+        });
+
+        log('🚀 Bridge tester fully initialized and ready', 'success');
+    });
+</script>
 </body>
 </html>
