@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bakong Mini Service Bridge Tester</title>
+    <title>Bakong Bridge Tester - Public Access</title>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
@@ -100,10 +100,10 @@
         .method-available { color: #059669; }
         .method-unavailable { color: #dc2626; }
         
-        .logs {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
+        .logs { 
+            background: #f8fafc; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
             padding: 12px;
             max-height: 200px;
             overflow-y: auto;
@@ -115,7 +115,7 @@
         .log-success { color: #059669; }
         .log-warn { color: #d97706; }
         .log-error { color: #dc2626; }
-
+        
         .warning-box {
             background: #fef3c7;
             border: 1px solid #f59e0b;
@@ -124,17 +124,31 @@
             margin-bottom: 16px;
         }
         .warning-box h4 { margin: 0 0 8px; color: #92400e; }
-
+        
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .info-box h4 { margin: 0 0 8px; color: #1e40af; }
+        
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-<h1>Bakong Mini Service Bridge Tester</h1>
-<p>Comprehensive testing tool for validating JavaScript bridge integration with the Bakong mobile app. Test all bridge methods, validate data formats, and simulate various payment scenarios.</p>
+<h1>🚀 Bakong Bridge Tester</h1>
+<p>Public testing tool for validating JavaScript bridge integration with the Bakong mobile app. Test all bridge methods, validate data formats, and simulate various payment scenarios.</p>
+
+<div class="info-box">
+    <h4>🌐 Public Access</h4>
+    <p>This is a publicly accessible version of the Bakong Bridge Tester. You can use this tool to test your service integration before submitting for approval. All bridge methods must work correctly for your service to be accepted.</p>
+</div>
 
 <div class="warning-box">
-    <h4>Important for Service Providers</h4>
+    <h4>⚠️ Important for Service Providers</h4>
     <p>This tool simulates the Bakong app environment. Use it to test your service integration before submitting for approval. All bridge methods must work correctly for your service to be accepted.</p>
 </div>
 
@@ -159,8 +173,9 @@
 <div class="section">
     <h3>Order Completion Testing</h3>
     <p class="small">Test the orderCompleted() method with order and transaction IDs</p>
-
+    
     <button class="success" id="btnOrderCompleted">✅ Trigger orderCompleted()</button>
+    <button class="secondary small" onclick="generateOrderData()">�� Generate New IDs</button>
 </div>
 
 <div class="section">
@@ -229,13 +244,33 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
         description: "Book tickets",
         merchantName: "Sorya Bus",
         receiverAccountId: "soyabus@devb",
-        receiverName: "Chanmony Sok",
+        receiverName: "Phich Leng",
         orderId: "000001474"
     };
     window.Bakong.paymentInput(JSON.stringify(paymentData));
 } else {
     console.error('Bakong bridge not available');
 }</code></pre>
+</div>
+
+<div class="section">
+    <h3>📱 How to Use</h3>
+    <p class="small">Follow these steps to test your Bakong integration:</p>
+    <ol style="color: #64748b; line-height: 1.6;">
+        <li><strong>Open in Bakong App:</strong> Access this page through the Bakong mobile app's webview</li>
+        <li><strong>Check Bridge Status:</strong> Verify that the Bakong bridge is available and all methods are detected</li>
+        <li><strong>Test Payment Input:</strong> Use the pre-filled Sorya Bus data or modify it for your testing needs</li>
+        <li><strong>Test Order Completion:</strong> Trigger the orderCompleted() method with generated order and transaction IDs</li>
+        <li><strong>Test Navigation:</strong> Try the goBack() and dismiss() methods</li>
+        <li><strong>Test Appearance Controls:</strong> Modify the title, status bar, and toolbar settings</li>
+        <li><strong>Monitor Logs:</strong> Check the logs section for detailed information about each test</li>
+    </ol>
+</div>
+
+<div class="section">
+    <h3>🔗 Integration Guide</h3>
+    <p class="small">For detailed integration instructions, visit the official Bakong documentation or contact the Bakong team for support.</p>
+    <p class="small"><strong>Note:</strong> This tool is for testing purposes only. Ensure your production implementation follows all security best practices and Bakong guidelines.</p>
 </div>
 
 <script>
@@ -247,7 +282,7 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
         description: "Book tickets",
         merchantName: "Sorya Bus",
         receiverAccountId: "soyabus@devb",
-        receiverName: "Chanmony Sok",
+        receiverName: "Phich Leng",
         orderId: "000001474"
     };
 
@@ -301,7 +336,7 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
         } else {
             statusEl.textContent = 'Not Available';
             statusEl.className = 'badge unavailable';
-            log('Bakong bridge not detected', 'error');
+            log('Bakong bridge not detected - This is normal when viewing in a regular browser', 'warn');
         }
 
         // Check individual methods
@@ -321,6 +356,14 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
             `;
             methodsEl.appendChild(div);
         });
+    }
+
+    function generateOrderData() {
+        orderData = {
+            orderId: "order_" + Date.now(),
+            transactionId: "txn_" + Date.now()
+        };
+        log(`🔄 Generated new order data: ${JSON.stringify(orderData)}`, 'info');
     }
 
     function validatePaymentData() {
