@@ -3,237 +3,203 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bakong Bridge Tester - Public Access</title>
+    <title>Bakong Mini Service Integration Guide</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
-            margin: 0; 
-            padding: 16px; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 16px;
             background: #f8fafc;
+            line-height: 1.6;
         }
-        h1 { font-size: 24px; margin: 0 0 8px; color: #1e293b; }
-        h2 { font-size: 18px; margin: 16px 0 8px; color: #334155; }
-        p { color: #64748b; margin: 0 0 16px; line-height: 1.5; }
-        .section { 
-            background: #fff; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 12px; 
-            padding: 16px; 
-            margin-bottom: 16px;
+        h1 { font-size: 28px; margin: 0 0 16px; color: #1e293b; }
+        h2 { font-size: 22px; margin: 24px 0 12px; color: #334155; }
+        h3 { font-size: 18px; margin: 20px 0 8px; color: #1e293b; }
+        h4 { font-size: 16px; margin: 16px 0 6px; color: #334155; }
+        p { color: #64748b; margin: 0 0 16px; }
+        .section {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        .section h3 { margin: 0 0 8px; font-size: 16px; color: #1e293b; }
-        button { 
-            display: inline-block; 
-            padding: 10px 16px; 
-            margin: 6px 4px 0 0; 
-            border: 0; 
-            border-radius: 8px; 
-            background: #3b82f6; 
-            color: #fff; 
-            font-weight: 600; 
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover { background: #2563eb; }
-        button.secondary { background: #64748b; }
-        button.secondary:hover { background: #475569; }
-        button.success { background: #10b981; }
-        button.success:hover { background: #059669; }
-        button.warn { background: #ef4444; }
-        button.warn:hover { background: #dc2626; }
-        button.small { padding: 6px 12px; font-size: 14px; }
-        /* Enforce white text for all buttons */
-        button, button.secondary, button.success, button.warn, button.small { color: #ffffff !important; }
+        .section h3 { margin: 0 0 12px; font-size: 18px; color: #1e293b; }
         
-        code { 
-            background: #1e293b; 
-            color: #e2e8f0; 
-            padding: 2px 6px; 
-            border-radius: 4px; 
+        code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-size: 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
         }
-        pre { 
-            background: #1e293b; 
-            color: #e2e8f0; 
-            padding: 16px; 
-            border-radius: 8px; 
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
             overflow-x: auto;
             font-size: 14px;
             line-height: 1.4;
+            margin: 12px 0;
         }
-        .small { font-size: 12px; color: #6b7280; }
-        
-        input[type="text"], textarea, select { 
-            width: 100%; 
-            box-sizing: border-box; 
-            padding: 12px; 
-            border: 1px solid #d1d5db; 
-            border-radius: 8px; 
-            margin-top: 8px; 
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-            font-size: 14px;
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
         }
-        textarea { min-height: 120px; }
         
-        .badge { 
-            display: inline-block; 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            font-weight: 500;
-            margin-left: 8px; 
-        }
-        .badge.available { background: #dcfce7; color: #166534; }
-        .badge.unavailable { background: #fee2e2; color: #991b1b; }
-        .badge.checking { background: #fef3c7; color: #92400e; }
-        
-        .method-status { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 4px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .method-status:last-child { border-bottom: none; }
-        .method-name { font-family: monospace; font-weight: 500; }
-        .method-available { color: #059669; }
-        .method-unavailable { color: #dc2626; }
-        
-        .logs { 
-            background: #f8fafc; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 8px; 
-            padding: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            font-family: monospace;
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 12px;
+            font-weight: 500;
+            margin-left: 8px;
         }
-        .log-entry { margin-bottom: 4px; }
-        .log-info { color: #3b82f6; }
-        .log-success { color: #059669; }
-        .log-warn { color: #d97706; }
-        .log-error { color: #dc2626; }
+        .badge.required { background: #fee2e2; color: #991b1b; }
+        .badge.conditional { background: #fef3c7; color: #92400e; }
+        .badge.optional { background: #e0e7ff; color: #3730a3; }
         
         .warning-box {
             background: #fef3c7;
             border: 1px solid #f59e0b;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
         .warning-box h4 { margin: 0 0 8px; color: #92400e; }
         
         .info-box {
-            background: #dbeafe;
-            border: 1px solid #3b82f6;
+            background: #e0f2fe;
+            border: 1px solid #0891b2;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
-        .info-box h4 { margin: 0 0 8px; color: #1e40af; }
+        .info-box h4 { margin: 0 0 8px; color: #0c4a6e; }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .method-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .method-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 4px solid #e2e8f0;
+        }
+        .method-item.required { border-left-color: #ef4444; }
+        .method-item.conditional { border-left-color: #f59e0b; }
+        .method-item.optional { border-left-color: #3b82f6; }
+        
+        .method-name { 
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            font-weight: 500;
+        }
+        
+        .flow-step {
+            background: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .flow-step h5 { margin: 0 0 4px; color: #1e293b; }
+        
+        ul, ol { margin: 12px 0; padding-left: 24px; }
+        li { margin: 6px 0; color: #64748b; }
+        
+        .highlight { background: #fef3c7; padding: 2px 4px; border-radius: 3px; }
     </style>
 </head>
 <body>
-<h1>🚀 Bakong Bridge Tester</h1>
-<p>Public testing tool for validating JavaScript bridge integration with the Bakong mobile app. Test all bridge methods, validate data formats, and simulate various payment scenarios.</p>
-
-<div class="info-box">
-    <h4>🌐 Public Access</h4>
-    <p>This is a publicly accessible version of the Bakong Bridge Tester. You can use this tool to test your service integration before submitting for approval. All bridge methods must work correctly for your service to be accepted.</p>
-</div>
+<h1>Bakong Mini Service Integration Guide</h1>
+<p>Complete guide for integrating your web service with the Bakong mobile app. This document covers all required bridge methods, event handling, and implementation best practices.</p>
 
 <div class="warning-box">
     <h4>⚠️ Important for Service Providers</h4>
-    <p>This tool simulates the Bakong app environment. Use it to test your service integration before submitting for approval. All bridge methods must work correctly for your service to be accepted.</p>
+    <p><strong>Required</strong> bridge methods must work correctly for your service to be accepted. <strong>Conditional</strong> methods become required when you show the toolbar. <strong>Optional</strong> methods enhance user experience but are not mandatory.</p>
 </div>
 
 <div class="section">
-    <h3>Bridge Availability Status</h3>
-    <div style="margin-bottom: 12px;">
-        <strong>Bakong Bridge:</strong> <span id="bridgeStatus" class="badge checking">checking…</span>
-    </div>
-    <div id="methods"></div>
-</div>
-
-<div class="section">
-    <h3>Payment Input Testing</h3>
-    <p class="small">Test the paymentInput() method with Sorya Bus payment data</p>
-
-    <label class="small">Payment Data (JSON)</label>
-    <textarea id="paymentPayload" placeholder="Enter payment data JSON here..."></textarea>
-    <button id="btnPayment">Trigger paymentInput()</button>
-    <button class="secondary small" onclick="validatePaymentData()">🔍 Validate Only</button>
-</div>
-
-<div class="section">
-    <h3>Order Completion Testing</h3>
-    <p class="small">Test the orderCompleted() method with order and transaction IDs</p>
+    <h3>Bridge Method Requirements</h3>
     
-    <button class="success" id="btnOrderCompleted">✅ Trigger orderCompleted()</button>
-</div>
-
-<div class="section">
-    <h3>Navigation Testing</h3>
-    <p class="small">Test navigation bridge methods</p>
-    <button class="secondary" id="btnGoBack">⬅️ goBack()</button>
-    <button class="warn" id="btnDismiss">❌ dismiss()</button>
-</div>
-
-<!-- Appearance Controls section -->
-<div class="section">
-    <h3>Appearance Controls</h3>
-    <p class="small">Control title, status bar, and toolbar appearance via bridge</p>
-
-    <label class="small">Set Title</label>
-    <input id="titleInput" type="text" placeholder="Enter title (e.g., My Service Page)" />
-    <button class="small" id="btnSetTitle">setTitle()</button>
-
-    <div style="height: 8px"></div>
-
-    <label class="small">Status Bar Background Color (hex or CSS color)</label>
-    <input id="statusBgInput" type="text" placeholder="#121212 or #FFFFFF or rgb(0,0,0)" />
-    <button class="small" id="btnSetStatusBarColor">setStatusBarColor(background)</button>
-
-    <div style="height: 8px"></div>
-
-    <label class="small">Status Bar Icons Mode</label>
-    <select id="iconModeSelect">
-        <option value="light">Light Icons (for dark background)</option>
-        <option value="dark">Dark Icons (for light background)</option>
-    </select>
-    <button class="small" id="btnSetIconMode">setStatusBarIconColor(isLight)</button>
-
-    <div style="height: 8px"></div>
-
-    <label class="small">Set Background & Icons Together</label>
-    <button class="small" id="btnSetStatusBarBoth">setStatusBarColor(background, color)</button>
-
-    <div style="height: 8px"></div>
-
-    <label class="small">Toolbar Visibility</label>
-    <button class="small success" id="btnShowToolbar">Show Toolbar</button>
-    <button class="small warn" id="btnHideToolbar">Hide Toolbar</button>
-</div>
-
-<div class="section">
-    <h3>Test Results & Logs</h3>
-    <div id="logs" class="logs">
-        <div class="log-entry log-info">Bridge tester initialized</div>
+    <div class="method-list">
+        <div class="method-item required">
+            <span class="method-name">paymentInput()</span>
+            <span class="badge required">REQUIRED</span>
+        </div>
+        <div class="method-item required">
+            <span class="method-name">goBack()</span>
+            <span class="badge required">REQUIRED</span>
+        </div>
+        <div class="method-item required">
+            <span class="method-name">dismiss()</span>
+            <span class="badge required">REQUIRED</span>
+        </div>
+        <div class="method-item conditional">
+            <span class="method-name">setTitle()</span>
+            <span class="badge conditional">CONDITIONAL</span>
+        </div>
+        <div class="method-item conditional">
+            <span class="method-name">setStatusBarColor()</span>
+            <span class="badge conditional">CONDITIONAL</span>
+        </div>
+        <div class="method-item optional">
+            <span class="method-name">orderCompleted()</span>
+            <span class="badge optional">OPTIONAL</span>
+        </div>
+        <div class="method-item optional">
+            <span class="method-name">setToolbarVisible()</span>
+            <span class="badge optional">OPTIONAL</span>
+        </div>
+        <div class="method-item optional">
+            <span class="method-name">setStatusBarIconColor()</span>
+            <span class="badge optional">OPTIONAL</span>
+        </div>
     </div>
-    <button class="small secondary" onclick="clearLogs()">🗑️ Clear Logs</button>
-    <button class="small" onclick="exportLogs()">📥 Export Logs</button>
+    
+    <div class="info-box">
+        <h4>📋 Conditional Requirements</h4>
+        <p>When you call <code>setToolbarVisible(true)</code>, the following methods become <strong>required</strong>:</p>
+        <ul>
+            <li><code>setTitle()</code> - To set a meaningful title</li>
+            <li><code>setStatusBarColor()</code> - To ensure proper status bar appearance</li>
+        </ul>
+    </div>
 </div>
 
 <div class="section">
-    <h3>Implementation Examples</h3>
-    <p class="small">Copy this code snippet to implement in your service:</p>
+    <h3>Payment Integration Flow</h3>
+    
+    <div class="flow-step">
+        <h5>1. Initialize Payment</h5>
+        <p>Call <code>paymentInput()</code> with payment data when user wants to make a payment.</p>
+    </div>
+    
+    <div class="flow-step">
+        <h5>2. Handle Payment Completion</h5>
+        <p>Listen for <code>PaymentCompleted</code> event from mobile when payment succeeds.</p>
+    </div>
+    
+    <div class="flow-step">
+        <h5>3. Complete Order (Optional)</h5>
+        <p>Call <code>orderCompleted()</code> to notify mobile that the order is complete.</p>
+    </div>
+</div>
 
-    <h4>Payment Input Implementation</h4>
+<div class="section">
+    <h3>Required Implementation</h3>
+    
+    <h4>1. Payment Input</h4>
     <pre><code>// Always check if bridge is available before calling
 if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
     const paymentData = {
@@ -241,325 +207,225 @@ if (window.Bakong && typeof window.Bakong.paymentInput === 'function') {
         currencyCode: "116",
         currencyName: "KHR",
         description: "Book tickets",
-        merchantName: "Sorya Bus",
-        receiverAccountId: "soyabus@devb",
-        receiverName: "Phich Leng",
-        orderId: "000001474"
+        merchantName: "Your Service Name",
+        receiverAccountId: "your-account@devb",
+        receiverName: "Your Account Name",
+        orderId: "ORDER_123456"
     };
     window.Bakong.paymentInput(JSON.stringify(paymentData));
 } else {
     console.error('Bakong bridge not available');
 }</code></pre>
+
+    <h4>2. Payment Completion Event Handling</h4>
+    <pre><code>// Listen for payment completion events from mobile
+window.addEventListener('PaymentCompleted', function(event) {
+    try {
+        const paymentData = JSON.parse(event.detail);
+        console.log('Payment completed:', paymentData);
+        
+        // Handle successful payment
+        const { orderId, transactionHash, transactionId } = paymentData;
+        
+        // Update your UI, show success message, etc.
+        showPaymentSuccess(orderId, transactionHash);
+        
+        // Optionally notify mobile that order is complete
+        if (window.Bakong && typeof window.Bakong.orderCompleted === 'function') {
+            window.Bakong.orderCompleted(JSON.stringify({
+                orderId: orderId,
+                transactionId: transactionId || transactionHash
+            }));
+        }
+    } catch (e) {
+        console.error('Error parsing payment completion data:', e);
+    }
+});</code></pre>
+
+    <h4>3. Navigation Methods</h4>
+    <pre><code>// Go back functionality
+function goBack() {
+    if (window.Bakong && typeof window.Bakong.goBack === 'function') {
+        window.Bakong.goBack();
+    }
+}
+
+// Close/dismiss service
+function closeService() {
+    if (window.Bakong && typeof window.Bakong.dismiss === 'function') {
+        window.Bakong.dismiss();
+    }
+}</code></pre>
 </div>
 
 <div class="section">
-    <h3>📱 How to Use</h3>
-    <p class="small">Follow these steps to test your Bakong integration:</p>
-    <ol style="color: #64748b; line-height: 1.6;">
-        <li><strong>Open in Bakong App:</strong> Access this page through the Bakong mobile app's webview</li>
-        <li><strong>Check Bridge Status:</strong> Verify that the Bakong bridge is available and all methods are detected</li>
-        <li><strong>Test Payment Input:</strong> Use the pre-filled Sorya Bus data or modify it for your testing needs</li>
-        <li><strong>Test Order Completion:</strong> Trigger the orderCompleted() method with generated order and transaction IDs</li>
-        <li><strong>Test Navigation:</strong> Try the goBack() and dismiss() methods</li>
-        <li><strong>Test Appearance Controls:</strong> Modify the title, status bar, and toolbar settings</li>
-        <li><strong>Monitor Logs:</strong> Check the logs section for detailed information about each test</li>
-    </ol>
+    <h3>Appearance Control (When Using Toolbar)</h3>
+    
+    <h4>1. Show Toolbar and Set Title</h4>
+    <pre><code>// Show toolbar and set title (both become required)
+if (window.Bakong && typeof window.Bakong.setToolbarVisible === 'function') {
+    window.Bakong.setToolbarVisible(true);
+}
+
+if (window.Bakong && typeof window.Bakong.setTitle === 'function') {
+    window.Bakong.setTitle('Your Service Page');
+}</code></pre>
+
+    <h4>2. Set Status Bar and Toolbar Color</h4>
+    <pre><code>// Set status bar and toolbar color (both will match)
+if (window.Bakong && typeof window.Bakong.setStatusBarColor === 'function') {
+    window.Bakong.setStatusBarColor('#121212'); // Dark theme
+    // or
+    window.Bakong.setStatusBarColor('#FFFFFF'); // Light theme
+}</code></pre>
+
+    <h4>3. Set Status Bar Icon Color</h4>
+    <pre><code>// Set status bar icon color
+if (window.Bakong && typeof window.Bakong.setStatusBarIconColor === 'function') {
+    window.Bakong.setStatusBarIconColor(true);  // Light icons (for dark background)
+    // or
+    window.Bakong.setStatusBarIconColor(false); // Dark icons (for light background)
+}</code></pre>
 </div>
 
 <div class="section">
-    <h3>🔗 Integration Guide</h3>
-    <p class="small">For detailed integration instructions, contact the Bakong team for support.</p>
-    <p class="small"><strong>Note:</strong> This tool is for testing purposes only. Ensure your production implementation follows all security best practices and Bakong guidelines.</p>
-</div>
+    <h3>Mobile-to-Web Events</h3>
+    
+    <h4>1. PaymentCompleted Event</h4>
+    <p>Mobile sends this event when <code>paymentInput()</code> succeeds:</p>
+    <pre><code>window.dispatchEvent(new CustomEvent('PaymentCompleted', { 
+    detail: "{\"orderId\":\"TR2509-101504183252850826\",\"transactionHash\":\"6aab62b37465ae4901f621a30af08f08b446eee1b1034428299eddc953a55417\",\"transactionId\":\"\"}" 
+}));</code></pre>
 
-<script>
-    // Default payment data for Sorya Bus
-    const defaultPaymentData = {
-        amount: "54000",
-        currencyCode: "116",
-        currencyName: "KHR",
-        description: "Book tickets",
-        merchantName: "Sorya Bus",
-        receiverAccountId: "soyabus@devb",
-        receiverName: "Phich Leng",
-        orderId: "000001474"
-    };
-
-    // Order completion data
-    let orderData = {
-        orderId: "order_" + Date.now(),
-        transactionId: "txn_" + Date.now()
-    };
-
-    // Utility functions
-    function hasBridge() {
-        return typeof window.Bakong === 'object' && window.Bakong !== null;
-    }
-
-    function hasMethod(name) {
-        return hasBridge() && typeof window.Bakong[name] === 'function';
-    }
-
-    function generateRandomHash() {
-        const chars = "abcdef0123456789";
-        return Array.from({length: 64}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-    }
-
-    function log(message, type = 'info') {
-        const timestamp = new Date().toLocaleTimeString();
-        const logEntry = document.createElement('div');
-        logEntry.className = `log-entry log-${type}`;
-
-        const icon = {
-            info: 'ℹ️',
-            success: '✅',
-            warn: '⚠️',
-            error: '❌'
-        }[type] || 'ℹ️';
-
-        logEntry.textContent = `[${timestamp}] ${icon} ${message}`;
-
-        const logs = document.getElementById('logs');
-        logs.appendChild(logEntry);
-        logs.scrollTop = logs.scrollHeight;
-    }
-
-    function updateBridgeStatus() {
-        const statusEl = document.getElementById('bridgeStatus');
-        const methodsEl = document.getElementById('methods');
-
-        if (hasBridge()) {
-            statusEl.textContent = 'Available';
-            statusEl.className = 'badge available';
-            log('Bakong bridge detected successfully', 'success');
-        } else {
-            statusEl.textContent = 'Not Available';
-            statusEl.className = 'badge unavailable';
-            log('Bakong bridge not detected - This is normal when viewing in a regular browser', 'warn');
-        }
-
-        // Check individual methods
-        const methods = ['paymentInput', 'orderCompleted', 'goBack', 'dismiss', 'setTitle', 'setStatusBarIconColor', 'setStatusBarColor', 'setToolbarVisible'];
-        methodsEl.innerHTML = '';
-
-        methods.forEach(method => {
-            const div = document.createElement('div');
-            div.className = 'method-status';
-
-            const available = hasMethod(method);
-            div.innerHTML = `
-                <span class="method-name">${method}()</span>
-                <span class="${available ? 'method-available' : 'method-unavailable'}">
-                    ${available ? '✅ Available' : '❌ Missing'}
-                </span>
-            `;
-            methodsEl.appendChild(div);
-        });
-    }
-
-    function validatePaymentData() {
-        try {
-            const rawData = document.getElementById('paymentPayload').value;
-            const data = JSON.parse(rawData);
-
-            const required = ['amount', 'currencyCode', 'currencyName', 'description', 'merchantName', 'receiverAccountId', 'receiverName', 'orderId'];
-            const missing = required.filter(field => !data[field] || data[field].toString().trim() === '');
-
-            if (missing.length === 0) {
-                log('✅ Payment data validation passed', 'success');
-                alert('✅ Validation Passed\n\nAll required fields are present and valid.');
-            } else {
-                log(`❌ Payment data validation failed: missing ${missing.join(', ')}`, 'error');
-                alert(`❌ Validation Failed\n\nMissing required fields:\n${missing.join(', ')}`);
-            }
-        } catch (e) {
-            log(`❌ Invalid JSON in payment data: ${e.message}`, 'error');
-            alert(`❌ Invalid JSON\n\n${e.message}`);
-        }
-    }
-
-    function clearLogs() {
-        document.getElementById('logs').innerHTML = '<div class="log-entry log-info">️ Logs cleared</div>';
-    }
-
-    function exportLogs() {
-        const logs = document.getElementById('logs').textContent;
-        const blob = new Blob([logs], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `bakong-bridge-test-logs-${new Date().toISOString()}.txt`;
-        a.click();
-        URL.revokeObjectURL(url);
-        log('📥 Logs exported successfully', 'success');
-    }
-
-    // Bridge helper functions
-    function callSetTitle() {
-        const title = document.getElementById('titleInput').value.trim();
-        if (!hasMethod('setTitle')) {
-            log('❌ setTitle() method not available', 'error');
-            alert('❌ Bridge Error\n\nsetTitle() method is not available');
-            return;
-        }
-        try {
-            window.Bakong.setTitle(title || '');
-            log(`📝 Called setTitle('${title}')`, 'success');
-        } catch (e) {
-            log(`❌ Error calling setTitle(): ${e.message}`, 'error');
-        }
-    }
-
-    function callSetStatusBarColorOnly() {
-        const bg = document.getElementById('statusBgInput').value.trim();
-        if (!hasMethod('setStatusBarColor')) {
-            log('❌ setStatusBarColor() method not available', 'error');
-            alert('❌ Bridge Error\n\nsetStatusBarColor() method is not available');
-            return;
-        }
-        try {
-            window.Bakong.setStatusBarColor(bg || '#121212');
-            log(`🎨 Called setStatusBarColor('${bg || '#121212'}')`, 'success');
-        } catch (e) {
-            log(`❌ Error calling setStatusBarColor(background): ${e.message}`, 'error');
-        }
-    }
-
-    function callSetIconModeOnly() {
-        const mode = document.getElementById('iconModeSelect').value;
-        const isLight = mode === 'light';
-        if (!hasMethod('setStatusBarIconColor')) {
-            log('❌ setStatusBarIconColor() method not available', 'error');
-            alert('❌ Bridge Error\n\nsetStatusBarIconColor() method is not available');
-            return;
-        }
-        try {
-            window.Bakong.setStatusBarIconColor(isLight);
-            log(`🌓 Called setStatusBarIconColor(${isLight})`, 'success');
-        } catch (e) {
-            log(`❌ Error calling setStatusBarIconColor(): ${e.message}`, 'error');
-        }
-    }
-
-    function callSetStatusBarBoth() {
-        const bg = document.getElementById('statusBgInput').value.trim() || '#121212';
-        const mode = document.getElementById('iconModeSelect').value; // 'light' | 'dark'
-        if (!hasMethod('setStatusBarColor')) {
-            log('❌ setStatusBarColor(background, color) method not available', 'error');
-            alert('❌ Bridge Error\n\nsetStatusBarColor(background, color) method is not available');
-            return;
-        }
-        try {
-            window.Bakong.setStatusBarColor(bg, mode);
-            log(`🎯 Called setStatusBarColor('${bg}', '${mode}')`, 'success');
-        } catch (e) {
-            log(`❌ Error calling setStatusBarColor(background, color): ${e.message}`, 'error');
-        }
-    }
-
-    function callSetToolbarVisible(visible) {
-        if (!hasMethod('setToolbarVisible')) {
-            log('❌ setToolbarVisible() method not available', 'error');
-            alert('❌ Bridge Error\n\nsetToolbarVisible() method is not available');
-            return;
-        }
-        try {
-            window.Bakong.setToolbarVisible(visible);
-            log(`📱 Called setToolbarVisible(${visible})`, 'success');
-        } catch (e) {
-            log(`❌ Error calling setToolbarVisible(): ${e.message}`, 'error');
-        }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        updateBridgeStatus();
-        setTimeout(updateBridgeStatus, 1000); // Recheck after 1 second
-
-        // Load default payment data
-        document.getElementById('paymentPayload').value = JSON.stringify(defaultPaymentData, null, 2);
-
-        // Set up event listeners
-        document.getElementById('btnPayment').addEventListener('click', function() {
-            if (!hasMethod('paymentInput')) {
-                log('❌ paymentInput() method not available', 'error');
-                alert('❌ Bridge Error\n\npaymentInput() method is not available');
-                return;
-            }
-
-            try {
-                const rawData = document.getElementById('paymentPayload').value;
-                const data = JSON.parse(rawData);
-                window.Bakong.paymentInput(JSON.stringify(data));
-                log('📤 Called paymentInput() successfully', 'success');
-            } catch (e) {
-                log(`❌ Error calling paymentInput(): ${e.message}`, 'error');
-                alert(`❌ Error\n\n${e.message}`);
-            }
-        });
-
-        document.getElementById('btnOrderCompleted').addEventListener('click', function() {
-            if (!hasMethod('orderCompleted')) {
-                log('❌ orderCompleted() method not available', 'error');
-                alert('❌ Bridge Error\n\norderCompleted() method is not available');
-                return;
-            }
-
-            try {
-                window.Bakong.orderCompleted(JSON.stringify(orderData));
-                log(`📤 Called orderCompleted() with data: ${JSON.stringify(orderData)}`, 'success');
-            } catch (e) {
-                log(`❌ Error calling orderCompleted(): ${e.message}`, 'error');
-                alert(`❌ Error\n\n${e.message}`);
-            }
-        });
-
-        document.getElementById('btnGoBack').addEventListener('click', function() {
-            if (!hasMethod('goBack')) {
-                log('❌ goBack() method not available', 'error');
-                alert('❌ Bridge Error\n\ngoBack() method is not available');
-                return;
-            }
-
-            window.Bakong.goBack();
-            log('📤 Called goBack() successfully', 'success');
-        });
-
-        document.getElementById('btnDismiss').addEventListener('click', function() {
-            if (!hasMethod('dismiss')) {
-                log('❌ dismiss() method not available', 'error');
-                alert('❌ Bridge Error\n\ndismiss() method is not available');
-                return;
-            }
-
-            window.Bakong.dismiss();
-            log('📤 Called dismiss() successfully', 'success');
-        });
-
-        // Appearance controls event listeners
-        document.getElementById('btnSetTitle').addEventListener('click', callSetTitle);
-        document.getElementById('btnSetStatusBarColor').addEventListener('click', callSetStatusBarColorOnly);
-        document.getElementById('btnSetIconMode').addEventListener('click', callSetIconModeOnly);
-        document.getElementById('btnSetStatusBarBoth').addEventListener('click', callSetStatusBarBoth);
-        document.getElementById('btnShowToolbar').addEventListener('click', () => callSetToolbarVisible(true));
-        document.getElementById('btnHideToolbar').addEventListener('click', () => callSetToolbarVisible(false));
-
-        // Listen for payment completion events
-        window.addEventListener('PaymentCompleted', function(event) {
-            try {
-                const detail = event && event.detail ? event.detail : '';
-                const parsed = detail ? JSON.parse(detail) : detail;
-                log('📥 PaymentCompleted event received', 'success');
-                console.log('PaymentCompleted received:', parsed);
-                alert(`📥 Payment Event Received\n\n${JSON.stringify(parsed || detail, null, 2)}`);
-            } catch (e) {
-                log(`❌ Error parsing PaymentCompleted event: ${e.message}`, 'error');
-                alert(`📥 Payment Event Received (raw)\n\n${event && event.detail}`);
-            }
-        });
-
-        log('🚀 Bridge tester fully initialized and ready', 'success');
+    <h4>2. CloseRequest Event</h4>
+    <p>Mobile sends this event when user clicks close button:</p>
+    <pre><code>(function() {
+    // Dispatch close request event to web
+    var event = new CustomEvent('CloseRequest', { 
+        detail: { source: 'bakong' }
     });
-</script>
+    window.dispatchEvent(event);
+    console.log('Close request sent to web');
+})();</code></pre>
+
+    <h4>3. Handle Close Request</h4>
+    <pre><code>// Listen for close request events from mobile
+window.addEventListener('CloseRequest', function(event) {
+    console.log('Close request received from mobile');
+    
+    // Show confirmation dialog
+    const confirmed = confirm('Do you want to close this service?');
+    
+    if (confirmed) {
+        // Call dismiss() to close the service
+        if (window.Bakong && typeof window.Bakong.dismiss === 'function') {
+            window.Bakong.dismiss();
+        }
+    }
+});</code></pre>
+</div>
+
+<div class="section">
+    <h3>Best Practices</h3>
+    
+    <h4>1. Always Check Bridge Availability</h4>
+    <pre><code>// Good practice
+if (window.Bakong && typeof window.Bakong.methodName === 'function') {
+    window.Bakong.methodName();
+} else {
+    console.error('Bridge method not available');
+}</code></pre>
+
+    <h4>2. Handle Errors Gracefully</h4>
+    <pre><code>try {
+    const paymentData = JSON.parse(jsonString);
+    // Process payment data
+} catch (e) {
+    console.error('Invalid payment data:', e);
+    // Show error to user
+}</code></pre>
+
+    <h4>3. Validate Required Fields</h4>
+    <pre><code>function validatePaymentData(data) {
+    const required = ['amount', 'currencyCode', 'receiverAccountId', 'merchantName'];
+    const missing = required.filter(field => !data[field]);
+    
+    if (missing.length > 0) {
+        throw new Error(`Missing required fields: ${missing.join(', ')}`);
+    }
+    
+    return true;
+}</code></pre>
+
+    <h4>4. Use Proper User-Agent</h4>
+    <p>Your service will receive requests with the Bakong User-Agent format:</p>
+    <pre><code>Bakong:1.0.0:EN:Android:username@devb:phone:email:displayname</code></pre>
+</div>
+
+<div class="section">
+    <h3>Testing Your Integration</h3>
+    
+    <p>Use the Bakong Bridge Validator app to test your integration:</p>
+    <ol>
+        <li>Install the Bridge Validator app on your Android device</li>
+        <li>Load your service URL in the app</li>
+        <li>Test all required bridge methods</li>
+        <li>Verify event handling works correctly</li>
+        <li>Test payment flow end-to-end</li>
+    </ol>
+    
+    <div class="info-box">
+        <h4>🔧 Development Tips</h4>
+        <ul>
+            <li>Test on real devices, not just browsers</li>
+            <li>Verify all required methods work</li>
+            <li>Test conditional methods when toolbar is visible</li>
+            <li>Handle network errors gracefully</li>
+            <li>Validate all payment data before sending</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <h3>Common Issues & Solutions</h3>
+    
+    <h4>Issue: Bridge methods not available</h4>
+    <p><strong>Solution:</strong> Always check <code>window.Bakong</code> exists before calling methods.</p>
+    
+    <h4>Issue: Payment data validation fails</h4>
+    <p><strong>Solution:</strong> Ensure all required fields are present and properly formatted.</p>
+    
+    <h4>Issue: Status bar colors not working</h4>
+    <p><strong>Solution:</strong> Use valid hex colors (e.g., <code>#121212</code>) and call <code>setStatusBarColor()</code> after showing toolbar.</p>
+    
+    <h4>Issue: Events not received</h4>
+    <p><strong>Solution:</strong> Add event listeners before calling bridge methods that trigger events.</p>
+</div>
+
+<div class="section">
+    <h3>Support & Resources</h3>
+    
+    <p>For technical support and questions about Bakong mini service integration:</p>
+    <ul>
+        <li>Use the Bridge Validator app for testing</li>
+        <li>Check browser console for error messages</li>
+        <li>Verify all required methods are implemented</li>
+        <li>Test on multiple devices and screen sizes</li>
+    </ul>
+    
+    <div class="info-box">
+        <h4>📱 Ready to Submit?</h4>
+        <p>Before submitting your service for approval, ensure:</p>
+        <ul>
+            <li>✅ All required bridge methods work</li>
+            <li>✅ Payment flow is complete</li>
+            <li>✅ Navigation works correctly</li>
+            <li>✅ Conditional methods work when toolbar is visible</li>
+            <li>✅ Error handling is implemented</li>
+            <li>✅ Service works on mobile devices</li>
+        </ul>
+    </div>
+</div>
+
 </body>
 </html>
